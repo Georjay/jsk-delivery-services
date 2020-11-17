@@ -7,5 +7,6 @@ This Django Web Application is a customer database management system developed f
 
 ## Screenshots
 
-![](ext-images/jsk1.png)
-![](ext-images/jsk2.png)
+<img src="ext-images/jsk1.png>
+<img src="ext-images/jsk2.png>
+<img src="ext-images/jsk3.png>
