@@ -20,8 +20,8 @@ class DeliveryListView(LoginRequiredMixin, ListView):
     model = Delivery
     template_name = 'jskdelivery/home.html'
     context_object_name = 'deliveries'
-    ordering = ['-id']
-
+    ordering = ['-delivery_date']
+    paginate_by = 25
 
 class DeliveryCreateView(LoginRequiredMixin, CreateView):
     model = Delivery
@@ -39,6 +39,7 @@ class DeliveryUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+@login_required
 def dashboard(request):
     #Step 1: Create a DataPool with the data we want to retrieve.
     deliveries = \
@@ -68,11 +69,11 @@ def dashboard(request):
                        'text': 'Amount'}}})
 
     all_deliveries = Delivery.objects.all().count()
-    todays_deliveries = Delivery.objects.filter(added_at__date=date.today()).count()
-    last_seven_days = Delivery.objects.filter(added_at__gte=timezone.now()-timedelta(days=7)).count() #I replaced 'datetime' with 'timezone' to avoid a runtime error
-    last_30_days = Delivery.objects.filter(added_at__gte=timezone.now()-timedelta(days=30)).count()
+    todays_deliveries = Delivery.objects.filter(delivery_date__date=date.today()).count()
+    last_seven_days = Delivery.objects.filter(delivery_date__gte=timezone.now()-timedelta(days=7)).count() #I replaced 'datetime' with 'timezone' to avoid a runtime error
+    last_30_days = Delivery.objects.filter(delivery_date__gte=timezone.now()-timedelta(days=30)).count()
     total_amount = Delivery.objects.aggregate(sum=Coalesce(Sum('amount'), V(0))).get('sum')
-    total_amount_last_7_days = Delivery.objects.filter(added_at__gte=timezone.now()-timedelta(days=7)).aggregate(sum=Coalesce(Sum('amount'), V(0))).get('sum')
+    total_amount_last_7_days = Delivery.objects.filter(delivery_date__gte=timezone.now()-timedelta(days=7)).aggregate(sum=Coalesce(Sum('amount'), V(0))).get('sum')
     
     template = 'jskdelivery/dashboard.html'
     context = {

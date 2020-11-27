@@ -21,7 +21,7 @@ class Delivery(models.Model):
     items = models.TextField(max_length=255) 
     route = models.CharField(max_length=255)
     rider = models.CharField(max_length=100)
-    delivery_date = models.DateField("Date", default=timezone.now, blank=True)
+    delivery_date = models.DateTimeField("Date", default=timezone.now, blank=True)
     departure = models.TimeField(default=timezone.now, blank=True)
     arrival = models.TimeField(default=timezone.now, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
